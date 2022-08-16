@@ -45,9 +45,9 @@ def rgb_to_hex(rgb):
 ########################################################################
 class Dark:
     bg_color = "#0D0D14"
-    txt_color = "#fff"
+    txt_color = "#ffffff"
     accent_color = "#A8B9BD"
-    icons_color = "#fff"
+    icons_color = "#ffffff"
 
     BG_1 = adjust_lightness(bg_color, 1)
     BG_2 = adjust_lightness(bg_color, 0.9)
@@ -71,8 +71,8 @@ class Dark:
 
 
 class Light:
-    bg_color = "#fff"
-    txt_color = "#000"
+    bg_color = "#ffffff"
+    txt_color = "#000000"
     accent_color = "#00bcff"
     icons_color = ""
     

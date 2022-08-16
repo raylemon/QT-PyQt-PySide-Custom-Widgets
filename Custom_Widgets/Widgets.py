@@ -8,6 +8,7 @@
 ## IMPORTS
 ########################################################################
 import os
+os.environ['ICONIFY_QTLIB'] = "qtpy"
 import sys
 import iconify as ico  # pip install iconify
 from iconify.qt import QtGui, QtWidgets, QtCore

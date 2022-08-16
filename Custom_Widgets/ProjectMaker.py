@@ -20,7 +20,7 @@ from urllib.parse import urlparse
 from qtpy.QtCore import QUrl
 from qtpy.QtGui import QColor
 
-from .Qss.colorsystem import *
+from Qss.colorsystem import *
 
 
 def progress(count, total, status=''):

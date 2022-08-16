@@ -21,6 +21,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(531, 311)
+        MainWindow.setStyleSheet(u"*{color:#ffffff;}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"#centralwidget{background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgba(9, 27, 27, 255), stop:1 rgba(15, 24, 40, 255));}\n"
@@ -74,7 +75,7 @@ class Ui_MainWindow(object):
         font = QFont()
         font.setBold(True)
         font.setItalic(True)
-        font.setWeight(75)
+        font.setWeight(QFont.Weight(75))
         self.height.setFont(font)
 
         self.horizontalLayout_3.addWidget(self.height)
