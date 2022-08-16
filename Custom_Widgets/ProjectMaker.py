@@ -17,18 +17,10 @@ import shutil
 import json
 from urllib.parse import urlparse
 
-if 'PySide2' in sys.modules:
-    from PySide2.QtCore import QUrl
-    from PySide2.QtGui import QColor
+from qtpy.QtCore import QUrl
+from qtpy.QtGui import QColor
 
-elif 'PySide6' in sys.modules:
-    from PySide6.QtCore import QUrl
-    from PySide6.QtGui import QColor
-
-else:
-    raise Exception("PySide2 or PySide6 is required, please install it!")
-
-from . Qss.colorsystem import *
+from .Qss.colorsystem import *
 
 
 def progress(count, total, status=''):
@@ -39,7 +31,7 @@ def progress(count, total, status=''):
     bar = '=' * filled_len + '-' * (bar_len - filled_len)
 
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
-    sys.stdout.flush() 
+    sys.stdout.flush()
 
 
 def query_yes_no(question, default="yes"):
@@ -63,7 +55,8 @@ def query_yes_no(question, default="yes"):
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
-def generateIcons(iconsColor = "#fff"):  
+
+def generateIcons(iconsColor="#fff"):
     # Files folder
     dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, 'Qss/icons/original_svg')
@@ -75,15 +68,13 @@ def generateIcons(iconsColor = "#fff"):
     focused_color = adjust_lightness(normal_color, 1.5)
     disabled_color = adjust_lightness(normal_color, .5)
 
-
     iconsFolder = os.path.abspath(os.path.join(os.getcwd(), 'QSS/Icons'))
-
 
     print("Generating icons for your theme, please wait. This may take long\n")
 
     for root, dirs, files in os.walk(filename):
         for file in files:
-            list_of_files.append(os.path.join(root,file))
+            list_of_files.append(os.path.join(root, file))
 
     totalIcons = len(list_of_files)
 
@@ -95,18 +86,17 @@ def generateIcons(iconsColor = "#fff"):
             newSVG = content.replace(svg_color, normal_color)
             newBytes = str.encode(newSVG)
 
-            name_2 =  os.path.basename(urlparse(name).path).replace(".svg", ".png")
+            name_2 = os.path.basename(urlparse(name).path).replace(".svg", ".png")
             filename = os.path.abspath(os.path.join(iconsFolder, name_2))
 
             if not os.path.exists(iconsFolder):
                 os.makedirs(iconsFolder)
 
-            if not os.path.exists(filename):                
+            if not os.path.exists(filename):
                 try:
                     cairosvg.svg2png(bytestring=newBytes, write_to=filename)
                 except Exception as e:
                     print(e)
-                    
 
         # Create focus icons
         with codecs.open(name, encoding='utf-8', errors='ignore') as f:
@@ -115,7 +105,7 @@ def generateIcons(iconsColor = "#fff"):
             newSVG = content.replace(svg_color, focused_color)
             newBytes = str.encode(newSVG)
 
-            name_2 =  os.path.basename(urlparse(name).path).replace(".svg", "_focus.png")
+            name_2 = os.path.basename(urlparse(name).path).replace(".svg", "_focus.png")
             filename = os.path.abspath(os.path.join(iconsFolder, name_2))
 
             if not os.path.exists(iconsFolder):
@@ -126,7 +116,6 @@ def generateIcons(iconsColor = "#fff"):
                     cairosvg.svg2png(bytestring=newBytes, write_to=filename)
                 except Exception as e:
                     print(e)
-    
 
         # Create disabled icons
         with codecs.open(name, encoding='utf-8', errors='ignore') as f:
@@ -135,9 +124,9 @@ def generateIcons(iconsColor = "#fff"):
             newSVG = content.replace(svg_color, disabled_color)
             newBytes = str.encode(newSVG)
 
-            name_2 =  os.path.basename(urlparse(name).path).replace(".svg", "_disabled.png")
+            name_2 = os.path.basename(urlparse(name).path).replace(".svg", "_disabled.png")
             filename = os.path.abspath(os.path.join(iconsFolder, name_2))
-            
+
             if not os.path.exists(iconsFolder):
                 os.makedirs(iconsFolder)
 
@@ -146,28 +135,26 @@ def generateIcons(iconsColor = "#fff"):
                     cairosvg.svg2png(bytestring=newBytes, write_to=filename)
                 except Exception as e:
                     print(e)
-                
-        progress(int((list_of_files.index(name)/totalIcons) * 100), 100)
+
+        progress(int((list_of_files.index(name) / totalIcons) * 100), 100)
 
     print("\nCreating the resources (py) file")
     # Check resource file
     resource_path = os.path.abspath(os.path.join(os.getcwd(), 'QSS/QSS_Resources.qrc'))
-    if not os.path.exists(resource_path):   
-        shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'QSS_Resources.qrc')), os.path.abspath(os.path.join(os.getcwd(), 'QSS')))  
+    if not os.path.exists(resource_path):
+        shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'QSS_Resources.qrc')),
+                    os.path.abspath(os.path.join(os.getcwd(), 'QSS')))
     py_resource_path = resource_path.replace(".qrc", ".py")
     py_resource_path = py_resource_path.replace("QSS/", "")
-    py_resource_path = py_resource_path.replace("QSS\\", "") #for win
+    py_resource_path = py_resource_path.replace("QSS\\", "")  # for win
     py_resource_path = py_resource_path.replace("QSS_Resources", "QSS_Resources_rc")
     # Convert qrc to py
     try:
-        os.system('pyrcc5 '+'"'+resource_path+'" -o "'+py_resource_path+'"')
+        os.system('pyrcc5 ' + '"' + resource_path + '" -o "' + py_resource_path + '"')
     except Exception as e:
-        raise e  
+        raise e
 
     print("Resources (py) file created")
-
-
-
 
 
 # Current Directory
@@ -214,25 +201,25 @@ print("Resources folder created")
 print("Creating (qrc) resource file")
 # Check resource file
 resource_path = os.path.abspath(os.path.join(os.getcwd(), 'QSS/QSS_Resources.qrc'))
-if not os.path.exists(resource_path):   
-    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Qss/QSS_Resources.qrc')), os.path.abspath(os.path.join(os.getcwd(), 'QSS')))
+if not os.path.exists(resource_path):
+    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Qss/QSS_Resources.qrc')),
+                os.path.abspath(os.path.join(os.getcwd(), 'QSS')))
 
 print("Resource (qrc) file created")
 
 print("Creating the main (UI) interface file")
 # Check ui file
 resource_path = os.path.abspath(os.path.join(os.getcwd(), 'interface.ui'))
-if not os.path.exists(resource_path):   
-    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/uis/interface.ui')), os.getcwd())  
-
+if not os.path.exists(resource_path):
+    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/uis/interface.ui')), os.getcwd())
 
 print("Main (UI) interface file created")
 
 print("Creating the main (py) python file")
 # Check main file
 resource_path = os.path.abspath(os.path.join(os.getcwd(), 'main.py'))
-if not os.path.exists(resource_path):   
-    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/python/main.py')), os.getcwd())  
+if not os.path.exists(resource_path):
+    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/python/main.py')), os.getcwd())
 
 print("Main (py) python file created")
 
@@ -268,11 +255,11 @@ print("Icons have been created")
 print("Creating UI (py) file")
 # Check ui(py) file
 resource_path = os.path.abspath(os.path.join(os.getcwd(), 'ui_interface.py'))
-if not os.path.exists(resource_path):   
-    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/python/ui_interface.py')), os.getcwd())  
+if not os.path.exists(resource_path):
+    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/python/ui_interface.py')),
+                os.getcwd())
 
 print("UI (py) file has been created")
-
 
 print("Creating the JSON stylesheet file")
 
@@ -309,7 +296,7 @@ from the JSON stylesheet file inside your project
 while True:
     organizationName = input("Please enter the your organization name (Optional): ")
     if organizationName.isspace() or organizationName == "":
-        organizationName = appName+" Company"
+        organizationName = appName + " Company"
         break
     if query_yes_no("Your organization name is " + organizationName + ". Save the organization name and continue?"):
         break
@@ -317,7 +304,7 @@ while True:
 while True:
     domainName = input("Please enter the your domain name. Please enter a URL i.e domain.org (Optional): ")
     if domainName.isspace() or domainName == "":
-        domainName = appName+".org"
+        domainName = appName + ".org"
         break
     # if not QUrl(domainName).isValid():
     #     print("Invalid URL: %s", domainName, " Domain name must be a URL like domain.org")
@@ -325,11 +312,10 @@ while True:
     if query_yes_no("Your domain name is " + domainName + ". Save the domain name and continue?"):
         break
 
-
 # Check json file
 json_path = os.path.abspath(os.path.join(os.getcwd(), 'style.json'))
-if not os.path.exists(json_path):   
-    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/json/style.json')), os.getcwd())  
+if not os.path.exists(json_path):
+    shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'components/json/style.json')), os.getcwd())
 
 with open(json_path, 'r+') as f:
     data = json.load(f)
@@ -348,15 +334,14 @@ with open(json_path, 'r+') as f:
                 appSettings = settings['AppSettings']
 
                 appSettings["OrginizationName"] = str(appName)
-                
+
                 appSettings["ApplicationName"] = str(organizationName)
-                    
+
                 appSettings["OrginizationDormain"] = str(domainName)
 
-    f.seek(0)  
+    f.seek(0)
     json.dump(data, f, indent=4)
     f.truncate()
-
 
 print("JSON stylesheet file created")
 
@@ -393,9 +378,9 @@ This style will override the default theme style.
 
     """)
 
-
 while True:
-    if not query_yes_no("Run the created project or exit the project wizard? Type yes to run the app or no to exit the wizard"):
+    if not query_yes_no(
+            "Run the created project or exit the project wizard? Type yes to run the app or no to exit the wizard"):
         break
     else:
         print("""
@@ -405,6 +390,5 @@ RUNNING YOUR PROJECT
 ########################################################################
         """)
         call(["python", "main.py"])
-
 
 exit()

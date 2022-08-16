@@ -9,13 +9,8 @@
 ########################################################################
 import sys
 
-if 'PySide2' in sys.modules:
-    from PySide2 import QtCore
-    from PySide2.QtCore import *
-
-elif 'PySide6' in sys.modules:
-    from PySide6 import QtCore
-    from PySide6.QtCore import *
+from qtpy import QtCore
+from qtpy.QtCore import *
 
 import random
 ########################################################################

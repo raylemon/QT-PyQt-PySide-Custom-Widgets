@@ -3,22 +3,22 @@
 ########################################################################
 
 ########################################################################
+# IMPORT Custom widgets
+from Custom_Widgets.Widgets import *
+########################################################################
 ## IMPORTS
 ########################################################################
-import os
-import sys
 ########################################################################
 # IMPORT GUI FILE
 from ui_interface import *
-########################################################################
 
 ########################################################################
-# IMPORT Custom widgets
-from Custom_Widgets.Widgets import *
+
 # INITIALIZE APP SETTINGS
 settings = QSettings()
-########################################################################
 
+
+########################################################################
 
 
 ########################################################################
@@ -35,8 +35,8 @@ class MainWindow(QMainWindow):
         ########################################################################
         # self = QMainWindow class
         # self.ui = Ui_MainWindow / user interface class
-        #Use this if you only have one json file named "style.json" inside the root directory, "json" directory or "jsonstyles" folder.
-        loadJsonStyle(self, self.ui) 
+        # Use this if you only have one json file named "style.json" inside the root directory, "json" directory or "jsonstyles" folder.
+        loadJsonStyle(self, self.ui)
 
         # Use this to specify your json file(s) path/name
         # loadJsonStyle(self, self.ui, jsonFiles = {
@@ -48,14 +48,11 @@ class MainWindow(QMainWindow):
         #######################################################################
         # SHOW WINDOW
         #######################################################################
-        self.show() 
+        self.show()
+
+    ########################################################################
 
 
-
-
-
-
-########################################################################
 ## EXECUTE APP
 ########################################################################
 if __name__ == "__main__":
@@ -68,4 +65,4 @@ if __name__ == "__main__":
     sys.exit(app.exec_())
 ########################################################################
 ## END===>
-########################################################################  
+########################################################################

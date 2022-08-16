@@ -4,11 +4,9 @@
 import os
 import sys
 import traceback
-if 'PySide2' in sys.modules:
-    from PySide2.QtCore import QObject, Signal, QRunnable, Slot 
 
-elif 'PySide6' in sys.modules:
-    from PySide6.QtCore import QObject, Signal, QRunnable, Slot
+from qtpy.QtCore import QObject, Signal, QRunnable, Slot
+
 
 ########################################################################
 ## WORKER SIGNAL CLASS
@@ -36,6 +34,7 @@ class WorkerSignals(QObject):
     error = Signal(tuple)
     result = Signal(object)
     progress = Signal(int)
+
 
 ########################################################################
 ## 
@@ -89,7 +88,7 @@ class Worker(QRunnable):
             self.signals.result.emit(result)  # Return the result of the processing
         finally:
             self.signals.finished.emit()  # Done
-    
+
 
 ########################################################################
 ## WORKER  CLASS
@@ -101,7 +100,7 @@ class WorkerResponse():
     def print_output(s):
         if s is not None:
             print(s)
-        
+
     ########################################################################
     ## 
     ########################################################################
@@ -111,11 +110,10 @@ class WorkerResponse():
     ########################################################################
     def thread_complete():
         print("THREAD COMPLETE!")
+
     ########################################################################
     ## 
     ########################################################################
-
-
 
     ########################################################################
     ## WORKER THREAD PROGRESS FUNCTION
@@ -126,7 +124,6 @@ class WorkerResponse():
     ########################################################################
     ## 
     ########################################################################
-
 
 ########################################################################
 ## 

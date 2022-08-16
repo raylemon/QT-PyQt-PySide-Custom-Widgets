@@ -4,11 +4,11 @@ Awesome custom widgets made for QT Desktop Applications. Simplify your UI develo
 # Installation 
 First time installer:
 ```
-pip install QT-PyQt-PySide-Custom-Widgets
+pip install QT-Custom-Widgets
 ```
 Upgrade/install the latest version:
 ```
-pip install --upgrade QT-PyQt-PySide-Custom-Widgets
+pip install --upgrade QT-Custom-Widgets
 ```
 
 # Installation Testing
