@@ -1,14 +1,14 @@
 [project]
 name = "QT-Custom-Widgets"
-version = "0.1.0"
+version = "0.1.1"
 description = "Custom widgets and widget animations made for Qt applications"
 authors = [
-    {name = "RayLemon", email = "big0424@gmail.com"},
+    {name = "RayLemon", email = "raylemon0424@gmail.com"},
 ]
 dependencies = [
     "qtpy>=2.2.0",
     "qtsass>=0.3.0",
-    "pyside6>=6.3.1",
+    # "pyside6>=6.3.1",
     "matplotlib>=3.5.3",
     "mock>=4.0.3",
     "iconify>=0.0.103",
