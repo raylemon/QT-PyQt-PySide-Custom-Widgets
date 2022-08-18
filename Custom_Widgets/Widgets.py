@@ -2522,7 +2522,7 @@ def applyJsonStyle(self, ui, data):
 
                 if "OrganizationDomain" in settings['AppSettings'] and len(
                         str(appSettings["OrganizationDomain"])) > 0:
-                    self.organizationDomain = str(appSettings["OrginizationDormain"]).replace(" ", "")
+                    self.organizationDomain = str(appSettings["OrganizationDomain"]).replace(" ", "")
                 else:
                     self.organizationDomain = ""
 
