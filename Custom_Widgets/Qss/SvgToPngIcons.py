@@ -185,7 +185,7 @@ class NewIconsGenerator():
                     rcc = 'pyside2-rcc'
                 else:
                     rcc = 'pyrcc5'
-                os.system( rcc +'"' + resource_path + '" -o "' + py_resource_path + '"')
+                os.system( rcc +' "' + resource_path + '" -o "' + py_resource_path + '"')
                 settings.setValue("ICONS-COLOR", normal_color)
             except Exception as e:
                 # raise e

@@ -1,6 +1,6 @@
 [project]
 name = "QT-Custom-Widgets"
-version = "0.1.4"
+version = "0.1.5"
 description = "Custom widgets and widget animations made for Qt applications"
 authors = [
     {name = "RayLemon", email = "raylemon0424@gmail.com"},
