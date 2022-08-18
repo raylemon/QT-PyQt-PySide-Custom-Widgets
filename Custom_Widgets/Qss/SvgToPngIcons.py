@@ -7,6 +7,8 @@ from urllib.parse import urlparse
 from pathlib import Path
 import __main__
 
+import qtpy
+
 from .colorsystem import *
 
 settings = QSettings()
@@ -27,7 +29,7 @@ class NewIconsGenerator():
         list_of_files = []
 
         color = CreateColorVariable.getCurrentThemeInfo(self)
-        svg_color = "#fff"
+        svg_color = "#ffffff"
         normal_color = str(color["icons-color"])
 
         focused_color = adjust_lightness(normal_color, 1.5)
@@ -175,7 +177,15 @@ class NewIconsGenerator():
             # Convert qrc to py
             try:
                 settings.setValue("ICONS-COLOR", normal_color)
-                os.system('pyrcc5 "' + resource_path + '" -o "' + py_resource_path + '"')
+                if qtpy.PYSIDE6:
+                    rcc = 'pyside6-rcc'
+                elif qtpy.PYQT6:
+                    rcc = "pyrcc6"
+                elif qtpy.PYSIDE:
+                    rcc = 'pyside2-rcc'
+                else:
+                    rcc = 'pyrcc5'
+                os.system( rcc +'"' + resource_path + '" -o "' + py_resource_path + '"')
                 settings.setValue("ICONS-COLOR", normal_color)
             except Exception as e:
                 # raise e
@@ -191,7 +201,7 @@ class NewIconsGenerator():
         filename = os.path.join(dirname, 'icons/original_svg')
         list_of_files = []
 
-        svg_color = "#fff"
+        svg_color = "#ffffff"
 
         for theme in self.ui.themes:
             THEME = settings.value("THEME")

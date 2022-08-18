@@ -17,6 +17,7 @@ import shutil
 import json
 from urllib.parse import urlparse
 
+import qtpy
 from qtpy.QtCore import QUrl
 from qtpy.QtGui import QColor
 
@@ -56,13 +57,13 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
-def generateIcons(iconsColor="#fff"):
+def generateIcons(iconsColor="#ffffff"):
     # Files folder
     dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, 'Qss/icons/original_svg')
     list_of_files = []
 
-    svg_color = "#fff"
+    svg_color = "#ffffff"
     normal_color = iconsColor
 
     focused_color = adjust_lightness(normal_color, 1.5)
@@ -150,7 +151,15 @@ def generateIcons(iconsColor="#fff"):
     py_resource_path = py_resource_path.replace("QSS_Resources", "QSS_Resources_rc")
     # Convert qrc to py
     try:
-        os.system('pyrcc5 ' + '"' + resource_path + '" -o "' + py_resource_path + '"')
+        if qtpy.PYSIDE6:
+            rcc = 'pyside6-rcc'
+        elif qtpy.PYQT6:
+            rcc = "pyrcc6"
+        elif qtpy.PYSIDE:
+            rcc = 'pyside2-rcc'
+        else:
+            rcc = 'pyrcc5'
+        os.system(rcc + '"' + resource_path + '" -o "' + py_resource_path + '"')
     except Exception as e:
         raise e
 
@@ -323,7 +332,7 @@ with open(json_path, 'r+') as f:
     if "QMainWindow" in data:
         for QMainWindow in data["QMainWindow"]:
             # Set window tittle
-            QMainWindow["tittle"] = appName
+            QMainWindow["title"] = appName
 
     ########################################################################
     ## QSETTINGS
@@ -333,11 +342,11 @@ with open(json_path, 'r+') as f:
             if "AppSettings" in settings:
                 appSettings = settings['AppSettings']
 
-                appSettings["OrginizationName"] = str(appName)
+                appSettings["OrganizationName"] = str(appName)
 
                 appSettings["ApplicationName"] = str(organizationName)
 
-                appSettings["OrginizationDormain"] = str(domainName)
+                appSettings["OrganizationDomain"] = str(domainName)
 
     f.seek(0)
     json.dump(data, f, indent=4)

@@ -2178,9 +2178,9 @@ def applyJsonStyle(self, ui, data):
     ########################################################################
     if "QMainWindow" in data:
         for QMainWindow in data['QMainWindow']:
-            if "tittle" in QMainWindow and len(str(QMainWindow["tittle"])) > 0:
+            if "title" in QMainWindow and len(str(QMainWindow["title"])) > 0:
                 # Set window tittle
-                self.setWindowTitle(str(QMainWindow["tittle"]))
+                self.setWindowTitle(str(QMainWindow["title"]))
 
             if "icon" in QMainWindow and len(str(QMainWindow["icon"])) > 0:
                 #######################################################################
@@ -2276,12 +2276,12 @@ def applyJsonStyle(self, ui, data):
                             getattr(self.ui, str(navigation["moveWindow"])).mouseMoveEvent = self.moveWindow
                         #######################################################################
 
-                    if "tittleBar" in navigation and len(str(navigation["tittleBar"])) > 0:
+                    if "titleBar" in navigation and len(str(navigation["titleBar"])) > 0:
                         #######################################################################
                         # Add click event/Mouse move event/drag event to the top header to move the window
                         #######################################################################
-                        if hasattr(self.ui, str(navigation["tittleBar"])):
-                            getattr(self.ui, str(navigation["tittleBar"])).mouseDoubleClickEvent = self.toggleWindowSize
+                        if hasattr(self.ui, str(navigation["titleBar"])):
+                            getattr(self.ui, str(navigation["titleBar"])).mouseDoubleClickEvent = self.toggleWindowSize
                         #######################################################################
 
     ########################################################################
@@ -2509,10 +2509,10 @@ def applyJsonStyle(self, ui, data):
         for settings in data['QSettings']:
             if "AppSettings" in settings:
                 appSettings = settings['AppSettings']
-                if "OrginizationName" in appSettings and len(str(appSettings["OrginizationName"])) > 0:
-                    self.orginazationName = str(appSettings["OrginizationName"])
+                if "OrganizationName" in appSettings and len(str(appSettings["OrganizationName"])) > 0:
+                    self.organizationName = str(appSettings["OrganizationName"])
                 else:
-                    self.orginazationName = ""
+                    self.organizationName = ""
 
                 if "ApplicationName" in settings['AppSettings'] and len(str(appSettings["ApplicationName"])) > 0:
                     self.applicationName = str(appSettings["ApplicationName"])
@@ -2520,11 +2520,11 @@ def applyJsonStyle(self, ui, data):
                 else:
                     self.applicationName = ""
 
-                if "OrginizationDormain" in settings['AppSettings'] and len(
-                        str(appSettings["OrginizationDormain"])) > 0:
-                    self.orginazationDomain = str(appSettings["OrginizationDormain"]).replace(" ", "")
+                if "OrganizationDomain" in settings['AppSettings'] and len(
+                        str(appSettings["OrganizationDomain"])) > 0:
+                    self.organizationDomain = str(appSettings["OrginizationDormain"]).replace(" ", "")
                 else:
-                    self.orginazationDomain = ""
+                    self.organizationDomain = ""
 
             if "ThemeSettings" in settings:
                 for themeSettings in settings['ThemeSettings']:
@@ -2743,7 +2743,7 @@ class FormProgressIndicator(QWidget):
         super(FormProgressIndicator, self).__init__(parent)
         # DEFAULT VALUES
         # Black font color
-        self.color = "#000"
+        self.color = "#000000"
         # Blue fill color
         self.fillColor = "#00a4bd"
         # Success color
@@ -2783,19 +2783,19 @@ class FormProgressIndicator(QWidget):
             errorFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 0, 0, 255), stop:1 rgba(85, 255, 255, 255))"
             successFillColor = fillColor
         elif themeNumber == 3:
-            self.color = "#fff"
+            self.color = "#ffffff"
             fillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(38, 59, 99, 255), stop:1 rgba(25, 28, 30, 255))"
             warningFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 150, 3, 255), stop:1 rgba(25, 28, 30, 255))"
             errorFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 0, 0, 255), stop:1 rgba(25, 28, 30, 255))"
             successFillColor = fillColor
         elif themeNumber == 4:
-            self.color = "#fff"
+            self.color = "#ffffff"
             fillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(38, 59, 99, 255), stop:1 rgba(0, 164, 189, 255))"
             warningFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 143, 30, 255), stop:1 rgba(0, 164, 189, 255))"
             errorFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 0, 0, 255), stop:1 rgba(0, 164, 189, 255))"
             successFillColor = fillColor
         elif themeNumber == 5:
-            self.color = "#000"
+            self.color = "#000000"
             fillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(0, 164, 189, 255))"
             warningFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(255, 85, 0, 255))"
             errorFillColor = "qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(255, 42, 42, 255))"
@@ -3084,12 +3084,12 @@ class QAppSettings():
 
     def updateAppSettings(self):
 
-        if len(str(self.orginazationName)) > 0:
-            QCoreApplication.setOrganizationName(str(self.orginazationName))
+        if len(str(self.organizationName)) > 0:
+            QCoreApplication.setOrganizationName(str(self.organizationName))
         if len(str(self.applicationName)) > 0:
             QCoreApplication.setApplicationName(str(self.applicationName))
-        if len(str(self.orginazationDomain)) > 0:
-            QCoreApplication.setOrganizationDomain(str(self.orginazationDomain))
+        if len(str(self.organizationDomain)) > 0:
+            QCoreApplication.setOrganizationDomain(str(self.organizationDomain))
 
         settings = QSettings()
 
