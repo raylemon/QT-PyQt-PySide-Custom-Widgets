@@ -65,13 +65,13 @@ self.ui.widget.units = "Km/h"
 ################################################################################################
 # Set minimum gauge value
 ################################################################################################
-self.ui.widget.minValue = 0
+self.ui.widget.min_value = 0
 # OR
 self.ui.widget.setMinValue(self.ui.MaxValueSlider.value())
 ################################################################################################
 # Set maximum gauge value
 ################################################################################################
-self.ui.widget.maxValue = 100
+self.ui.widget.max_value = 100
 # OR
 self.ui.widget.setMaxValue(100)
 
@@ -83,7 +83,7 @@ self.ui.widget.setMaxValue(100)
 ################################################################################################
 # Set scale divisions
 ################################################################################################
-self.ui.widget.scalaCount = 10
+self.ui.widget.scala_count = 10
 
 # OR
 
@@ -98,7 +98,7 @@ self.ui.widget.setScalaCount(10)
 # self.ui.widget.updateValue(self.ui.widget.minValue)
 # OR
 # Start from half/middle value
-self.ui.widget.updateValue(int(self.ui.widget.maxValue - self.ui.widget.minValue)/2)
+self.ui.widget.updateValue(int(self.ui.widget.max_value - self.ui.widget.min_value) / 2)
 
 ```
 
@@ -221,7 +221,7 @@ self.ui.widget.setGaugeColorInnerRadiusFactor(0)
 
 ```python
 # RGBA int values range from 0- 255
-self.ui.widget.setNeedleColor(R=R, G=G, B=B, Transparency=Transparency)
+self.ui.widget.setNeedleColor(r=R, g=G, b=B, transparency=Transparency)
 
 ```
 
@@ -229,7 +229,7 @@ self.ui.widget.setNeedleColor(R=R, G=G, B=B, Transparency=Transparency)
 
 ```python
 # RGBA int values range from 0- 255
-self.ui.widget.setNeedleColorOnDrag(R=R, G=G, B=B, Transparency=Transparency)
+self.ui.widget.setNeedleColorOnDrag(r=R, g=G, b=B, transparency=Transparency)
 
 ```
 

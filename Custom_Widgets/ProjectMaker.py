@@ -1,15 +1,3 @@
-########################################################################
-## SPINN DESIGN CODE
-# YOUTUBE: (SPINN TV) https://www.youtube.com/spinnTv
-# WEBSITE: spinntv.com
-# EMAIL: info@spinntv.com
-########################################################################
-
-########################################################################
-## IMPORTS
-########################################################################
-import os
-import sys
 from subprocess import call
 import cairosvg
 import codecs
@@ -17,9 +5,7 @@ import shutil
 import json
 from urllib.parse import urlparse
 
-import qtpy
-from qtpy.QtCore import QUrl
-from qtpy.QtGui import QColor
+from PySide6.QtGui import QColor
 
 from .Qss.colorsystem import *
 
@@ -57,19 +43,19 @@ def query_yes_no(question, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
-def generateIcons(iconsColor="#ffffff"):
+def generateIcons(icons_color="#FFFFFF"):
     # Files folder
     dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, 'Qss/icons/original_svg')
     list_of_files = []
 
-    svg_color = "#ffffff"
-    normal_color = iconsColor
+    svg_color = "#FFFFFF"
+    normal_color = icons_color
 
     focused_color = adjust_lightness(normal_color, 1.5)
     disabled_color = adjust_lightness(normal_color, .5)
 
-    iconsFolder = os.path.abspath(os.path.join(os.getcwd(), 'QSS/Icons'))
+    icons_folder = os.path.abspath(os.path.join(os.getcwd(), 'QSS/Icons'))
 
     print("Generating icons for your theme, please wait. This may take long\n")
 
@@ -77,89 +63,81 @@ def generateIcons(iconsColor="#ffffff"):
         for file in files:
             list_of_files.append(os.path.join(root, file))
 
-    totalIcons = len(list_of_files)
+    total_icons = len(list_of_files)
 
     for name in list_of_files:
         # Create normal icons
-        with codecs.open(name, encoding='utf-8', errors='ignore') as f:
-            content = f.read()
+        with codecs.open(name, encoding='utf-8', errors='ignore') as file:
+            content = file.read()
 
-            newSVG = content.replace(svg_color, normal_color)
-            newBytes = str.encode(newSVG)
+            new_svg = content.replace(svg_color, normal_color)
+            new_bytes = str.encode(new_svg)
 
             name_2 = os.path.basename(urlparse(name).path).replace(".svg", ".png")
-            filename = os.path.abspath(os.path.join(iconsFolder, name_2))
+            filename = os.path.abspath(os.path.join(icons_folder, name_2))
 
-            if not os.path.exists(iconsFolder):
-                os.makedirs(iconsFolder)
+            if not os.path.exists(icons_folder):
+                os.makedirs(icons_folder)
 
             if not os.path.exists(filename):
                 try:
-                    cairosvg.svg2png(bytestring=newBytes, write_to=filename)
+                    cairosvg.svg2png(bytestring=new_bytes, write_to=filename)
                 except Exception as e:
                     print(e)
 
         # Create focus icons
-        with codecs.open(name, encoding='utf-8', errors='ignore') as f:
-            content = f.read()
+        with codecs.open(name, encoding='utf-8', errors='ignore') as file:
+            content = file.read()
 
-            newSVG = content.replace(svg_color, focused_color)
-            newBytes = str.encode(newSVG)
+            new_svg = content.replace(svg_color, focused_color)
+            new_bytes = str.encode(new_svg)
 
             name_2 = os.path.basename(urlparse(name).path).replace(".svg", "_focus.png")
-            filename = os.path.abspath(os.path.join(iconsFolder, name_2))
+            filename = os.path.abspath(os.path.join(icons_folder, name_2))
 
-            if not os.path.exists(iconsFolder):
-                os.makedirs(iconsFolder)
+            if not os.path.exists(icons_folder):
+                os.makedirs(icons_folder)
 
             if not os.path.exists(filename):
                 try:
-                    cairosvg.svg2png(bytestring=newBytes, write_to=filename)
+                    cairosvg.svg2png(bytestring=new_bytes, write_to=filename)
                 except Exception as e:
                     print(e)
 
         # Create disabled icons
-        with codecs.open(name, encoding='utf-8', errors='ignore') as f:
-            content = f.read()
+        with codecs.open(name, encoding='utf-8', errors='ignore') as file:
+            content = file.read()
 
-            newSVG = content.replace(svg_color, disabled_color)
-            newBytes = str.encode(newSVG)
+            new_svg = content.replace(svg_color, disabled_color)
+            new_bytes = str.encode(new_svg)
 
             name_2 = os.path.basename(urlparse(name).path).replace(".svg", "_disabled.png")
-            filename = os.path.abspath(os.path.join(iconsFolder, name_2))
+            filename = os.path.abspath(os.path.join(icons_folder, name_2))
 
-            if not os.path.exists(iconsFolder):
-                os.makedirs(iconsFolder)
+            if not os.path.exists(icons_folder):
+                os.makedirs(icons_folder)
 
             if not os.path.exists(filename):
                 try:
-                    cairosvg.svg2png(bytestring=newBytes, write_to=filename)
+                    cairosvg.svg2png(bytestring=new_bytes, write_to=filename)
                 except Exception as e:
                     print(e)
 
-        progress(int((list_of_files.index(name) / totalIcons) * 100), 100)
+        progress(int((list_of_files.index(name) / total_icons) * 100), 100)
 
     print("\nCreating the resources (py) file")
     # Check resource file
-    resource_path = os.path.abspath(os.path.join(os.getcwd(), 'QSS/QSS_Resources.qrc'))
-    if not os.path.exists(resource_path):
+    res_path = os.path.abspath(os.path.join(os.getcwd(), 'QSS/QSS_Resources.qrc'))
+    if not os.path.exists(res_path):
         shutil.copy(os.path.abspath(os.path.join(os.path.dirname(__file__), 'QSS_Resources.qrc')),
                     os.path.abspath(os.path.join(os.getcwd(), 'QSS')))
-    py_resource_path = resource_path.replace(".qrc", ".py")
+    py_resource_path = res_path.replace(".qrc", ".py")
     py_resource_path = py_resource_path.replace("QSS/", "")
     py_resource_path = py_resource_path.replace("QSS\\", "")  # for win
     py_resource_path = py_resource_path.replace("QSS_Resources", "QSS_Resources_rc")
     # Convert qrc to py
     try:
-        if qtpy.PYSIDE6:
-            rcc = 'pyside6-rcc'
-        elif qtpy.PYQT6:
-            rcc = "pyrcc6"
-        elif qtpy.PYSIDE:
-            rcc = 'pyside2-rcc'
-        else:
-            rcc = 'pyrcc5'
-        os.system(rcc + ' "' + resource_path + '" -o "' + py_resource_path + '"')
+        os.system('pyside6-rcc' + ' "' + res_path + '" -o "' + py_resource_path + '"')
     except Exception as e:
         raise e
 
@@ -169,27 +147,14 @@ def generateIcons(iconsColor="#ffffff"):
 # Current Directory
 currentDir = os.getcwd()
 print("""
-########################################################################
-## SPINN DESIGN CODE
-# THE CUSTOM WIDGETS MODULE FOR QT
-# PROJECT MAKER
-# YOUTUBE: (SPINN TV) https://www.youtube.com/spinnTv
-# WEBSITE: spinntv.com
-# EMAIL: info@spinntv.com
-########################################################################
-
-########################################################################
-## INITIALIZING A NEW PROJECT TO:
-########################################################################
+    INITIALIZE PROJECT
     """)
 print(currentDir)
 
 # Check if the folder is empty
 if any(os.scandir(currentDir)):
     print("""
-########################################################################
-## EXITING BECAUSE THE FOLDER IS NOT EMPTY
-########################################################################
+EXITING BECAUSE THE FOLDER IS NOT EMPTY
 Please select an empty folder
         """)
     exit()
@@ -235,11 +200,9 @@ print("Main (py) python file created")
 print("Creating the icons (png) files")
 
 print("""
-
-########################################################################
 PLEASE ENTER YOUR ICONS COLOR BELOW:
-########################################################################
-You can pass the color HEX value such as #fff
+
+You can pass the color HEX value such as #FFFFFF
 or the color string value like white
 
     """)
@@ -273,11 +236,7 @@ print("UI (py) file has been created")
 print("Creating the JSON stylesheet file")
 
 print("""
-
-########################################################################
 PLEASE FILL IN THE REQUIRED DATA BELOW:
-########################################################################
-
     """)
 
 while True:
@@ -291,14 +250,12 @@ while True:
 
 print("""
 
-########################################################################
 THE FOLLOWING VALUES WILL BE USED TO SAVE YOUR APP CONFIGURATIONS SUCH AS
 APP APP THEME USING THE QSETTINGS CLASS
 
 The required value are application name, organisation name and domain name.
 If left empty, your app name will be used, you can change this later
 from the JSON stylesheet file inside your project
-########################################################################
 
     """)
 
@@ -331,12 +288,9 @@ with open(json_path, 'r+') as f:
     print(data)
     if "QMainWindow" in data:
         for QMainWindow in data["QMainWindow"]:
-            # Set window tittle
+            # Set window title
             QMainWindow["title"] = appName
 
-    ########################################################################
-    ## QSETTINGS
-    ########################################################################
     if "QSettings" in data:
         for settings in data["QSettings"]:
             if "AppSettings" in settings:
@@ -356,13 +310,12 @@ print("JSON stylesheet file created")
 
 print("""
 
-########################################################################
 CONGRATULATIONS! YOUR PROJECT HAS BEEN CREATED.
 
 WHAT NEXT??
 
 1. Open the interface.ui file inside your project folder using QT designer.
-This is your main inteface file.
+This is your main interface file.
 
 2. Put your app customization/style inside the JSON style.json file.
 Read more here on how to use the custom widgets module 
@@ -383,8 +336,6 @@ This style will override the default theme style.
 
 7. The QSS/_variables.scss contains your theme variables
 
-########################################################################
-
     """)
 
 while True:
@@ -394,9 +345,7 @@ while True:
     else:
         print("""
 
-########################################################################
 RUNNING YOUR PROJECT
-########################################################################
         """)
         call(["python", "main.py"])
 

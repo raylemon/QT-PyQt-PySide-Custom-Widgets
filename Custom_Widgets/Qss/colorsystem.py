@@ -10,7 +10,7 @@ import sys
 
 ########################################################################
 # IMPORT PYSIDE
-from qtpy.QtCore import *
+from PySide6.QtCore import *
 
 import matplotlib.colors as mc
 import colorsys

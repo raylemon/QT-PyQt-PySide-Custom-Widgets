@@ -1,17 +1,17 @@
 [project]
 name = "QT-Custom-Widgets"
-version = "0.1.5"
-description = "Custom widgets and widget animations made for Qt applications"
+version = "0.1.7"
+description = "Custom widgets and widget animations made for PySide6 applications"
 authors = [
     {name = "RayLemon", email = "raylemon0424@gmail.com"},
 ]
 dependencies = [
-    "qtpy>=2.2.0",
     "qtsass>=0.3.0",
     "matplotlib>=3.5.3",
     "mock>=4.0.3",
     "iconify>=0.0.103",
     "cairosvg>=2.5.2",
+    "pyside6>=6.4.0.1",
 ]
 requires-python = ">=3.10,<3.11"
 readme = "README.md"

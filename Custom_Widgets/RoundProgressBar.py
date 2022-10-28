@@ -1,126 +1,93 @@
-#############################################################################################
-# CREATOR:  ANJAL.P                                                                         #
-# ON:       2020 SEP.                                                                       #
-# AIM:      To Extend the capability of the PySide2 and PyQt5 Python library with easy to   #
-#           use extension containing commonly used widgets which is not natively supported  #
-#           by the Qt Frame work (or atleast for Python version of Qt).                     #
-# VERSION:  v1.0.0                                                                          #
-# NOTES:    CLASS : RoundProgressBar : Can be accessed by : importing                       #
-#           from PySide2extn.RoundProgressBar import roundProgressBar                       #
-# REFER:    Github:                                                                         #
-# DOCUMENTATION:                                                                            #
-#############################################################################################
-
-########################################################################
-# IMPROVED BY KHAMISI KIBET
-# ADOPTED TO WORK WITH THE CUSTOM WIDGETS MODULE
-## SPINN DESIGN CODE
-# YOUTUBE: (SPINN TV) https://www.youtube.com/spinnTv
-# WEBSITE: spinndesign.com
-########################################################################
-
-########################################################################
-## IMPORTS
-########################################################################
-import os
-import sys
-
-# This import is not used here, if removed sys.modules did not work on my pc
-import iconify as ico
-
 try:
-    from qtpy import QtWidgets, QtCore
-    from qtpy.QtCore import Qt, QSize
-    from qtpy.QtGui import QBrush, QColor, QPainter, QPen, QPaintEvent, QFont
+    from PySide6 import QtWidgets, QtCore
+    from PySide6.QtCore import Qt, QSize
+    from PySide6.QtGui import QBrush, QColor, QPainter, QPen, QPaintEvent, QFont
 except ModuleNotFoundError:
-    print("Please install any suitable version of QT (PyQt or PySide)")
+    print("Please install any suitable version of PySide 6")
 
-########################################################################
-## ROUND PROGRESSBAR
-########################################################################
-class roundProgressBar(QtWidgets.QWidget):
+class RoundProgressBar(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        super(roundProgressBar, self).__init__(parent)
+        super(RoundProgressBar, self).__init__(parent)
 
-        self.positionX = 0
-        self.positionY = 0
-        self.posFactor = 0
+        self.position_x = 0
+        self.position_y = 0
+        self.pos_factor = 0
 
-        self.rpb_minimumSize = (0, 0)
-        self.rpb_maximumSize = (0, 0)
-        self.rpb_dynamicMin = True
-        self.rpb_dynamicMax = True
-        self.rpb_Size = 0
-        self.sizeFactor = 0
+        self.rpb_minimum_size = (0, 0)
+        self.rpb_maximum_size = (0, 0)
+        self.rpb_dynamic_min = True
+        self.rpb_dynamic_max = True
+        self.rpb_size = 0
+        self.size_factor = 0
 
         self.rpb_maximum = 100
         self.rpb_minimum = 0
 
-        self.rpb_type = self.barStyleFlags.Donet
-        self.startPosition = self.startPosFlags.North
-        self.rpb_direction = self.rotationFlags.Clockwise
+        self.rpb_type = self.BarStyleFlags.Donut
+        self.start_position = self.StartPosFlags.North
+        self.rpb_direction = self.RotationFlags.Clockwise
 
-        self.rpb_textType = self.textFlags.Percentage
-        self.rpb_textColor = (0, 159, 227)
-        self.rpb_textWidth = self.rpb_Size / 8
-        self.rpb_textFont = 'Segoe UI'
-        self.rpb_textValue = '12%'
-        self.rpb_textRatio = 8
-        self.textFactorX = 0
-        self.textFactorY = 0
-        self.dynamicText = True
-        self.rpb_textActive = True
+        self.rpb_text_type = self.TextFlags.Percentage
+        self.rpb_text_color = (0, 159, 227)
+        self.rpb_text_width = self.rpb_size / 8
+        self.rpb_text_font = 'Segoe UI'
+        self.rpb_text_value = '12%'
+        self.rpb_text_ratio = 8
+        self.text_factor_x = 0
+        self.text_factor_y = 0
+        self.dynamic_text = True
+        self.rpb_text_active = True
 
-        self.lineWidth = 5
-        self.pathWidth = 5
-        self.rpb_lineStyle = self.lineStyleFlags.SolidLine
-        self.rpb_lineCap = self.lineCapFlags.SquareCap
-        self.lineColor = (0, 159, 227)
-        self.pathColor = (218, 218, 218)
+        self.line_width = 5
+        self.path_width = 5
+        self.rpb_line_style = self.LineStyleFlags.SolidLine
+        self.rpb_line_cap = self.LineCapFlags.SquareCap
+        self.line_color = (0, 159, 227)
+        self.path_color = (218, 218, 218)
 
-        self.rpb_circleColor = (218, 218, 218)
-        self.rpb_circleRatio = 0.8
-        self.rpb_circlePosX = 0
-        self.rpb_circlePosY = 0
+        self.rpb_circle_color = (218, 218, 218)
+        self.rpb_circle_ratio = 0.8
+        self.rpb_circle_pos_x = 0
+        self.rpb_circle_pos_y = 0
 
-        self.rpb_pieColor = (200, 200, 200)
-        self.rpb_pieRatio = 1
-        self.rpb_piePosX = 0
-        self.rpb_piePosY = 0
+        self.rpb_pie_color = (200, 200, 200)
+        self.rpb_pie_ratio = 1
+        self.rpb_pie_pos_x = 0
+        self.rpb_pie_pos_y = 0
 
         self.rpb_value = -45 * 16
 
-        if self.rpb_dynamicMin:
-            self.setMinimumSize(QSize(self.lineWidth * 6 + self.pathWidth * 6, self.lineWidth * 6 + self.pathWidth * 6))
+        if self.rpb_dynamic_min:
+            self.setMinimumSize(QSize(self.line_width * 6 + self.path_width * 6, self.line_width * 6 + self.path_width * 6))
 
     # ------------------------------------------------------CLASS ENUMERATORS
-    class lineStyleFlags:
+    class LineStyleFlags:
         SolidLine = Qt.SolidLine
         DotLine = Qt.DotLine
         DashLine = Qt.DashLine
 
-    class lineCapFlags:
+    class LineCapFlags:
         SquareCap = Qt.SquareCap
         RoundCap = Qt.RoundCap
 
-    class barStyleFlags:
-        Donet = 0
+    class BarStyleFlags:
+        Donut = 0
         Line = 1
         Pie = 2
         Pizza = 3
         Hybrid1 = 4
         Hybrid2 = 5
 
-    class rotationFlags:
+    class RotationFlags:
         Clockwise = -1
         AntiClockwise = 1
 
-    class textFlags:
+    class TextFlags:
         Value = 0
         Percentage = 1
 
-    class startPosFlags:
+    class StartPosFlags:
         North = 90 * 16
         South = -90 * 16
         East = 0 * 16
@@ -129,123 +96,39 @@ class roundProgressBar(QtWidgets.QWidget):
     # ------------------------------------------------------METHODS FOR CHANGING THE PROPERTY OF THE ROUNDPROGRESSBAR :SOLTS
 
     def rpb_setMinimumSize(self, width, height):
-        """
-        Minimum Size of the Widget
-        ...
-
-        Parameters
-        --------------
-
-        width : int
-            width of the Widget
-
-        height : int
-            height of the Widget
-
-        Raises
-        --------------
-        Exception : Sorry Width/Height should be an int
-        """
 
         if type(width) != type(5) or type(height) != type(5):
             raise Exception('Sorry Width/Height should be an int')
-            return
-        self.rpb_dynamicMin = False
+        self.rpb_dynamic_min = False
         self.setMinimumSize(width, height)
-        self.rpb_minimumSize = (width, height)
+        self.rpb_minimum_size = (width, height)
         self.update()
 
     def rpb_setMaximumSize(self, width, height):
-        """
-        Maximum Size of the Widget
-        ...
-
-        Parameters
-        --------------
-
-        width : int
-            width of the Widget
-
-        height : int
-            height of the Widget
-
-        Raises
-        --------------
-        Exception : Sorry Width/Height should be an int
-        """
-
         if type(width) != type(5) or type(height) != type(5):
             raise Exception('Sorry Width/Height should be an int')
-            return
-        self.rpb_dynamicMax = False
+        self.rpb_dynamic_max = False
         self.setMaximumSize(width, height)
-        self.rpb_maximumSize = (width, height)
+        self.rpb_maximum_size = (width, height)
         self.update()
 
     def rpb_setMaximum(self, maximum):
-        """
-        Maximum Value of the Progressbar
-        ...
-
-        Parameters
-        --------------
-
-        maximum : int
-            Maximum value of the round progress bar
-
-        Raises
-        --------------
-        Exception : Maximum and Minimum cannot be the Same
-        """
 
         if self.rpb_minimum == maximum:  # FOR AVOIDING DIVISION BY ZERO ERROR IN FUTURE
             raise Exception("Maximum and Minimum cannot be the Same")
-            return
         if self.rpb_maximum != maximum:
             self.rpb_maximum = maximum
             self.update()
 
     def rpb_setMinimum(self, minimum):
-        """
-        Minimum Value of the Progressbar
-        ...
 
-        Parameters
-        --------------
-
-        minimum : int
-            Minimum value of the round progress bar
-
-        Raises
-        --------------
-        Exception : Maximum and Minimum cannot be the Same
-        """
-
-        if self.rpb_minimum == maximum:  # FOR AVOIDING DIVISION BY ZERO ERROR IN FUTURE
+        if self.rpb_minimum == minimum:  # FOR AVOIDING DIVISION BY ZERO ERROR IN FUTURE
             raise Exception("Maximum and Minimum cannot be the Same")
-            return
         if self.rpb_minimum != minimum:
             self.rpb_minimum = minimum
             self.update()
 
     def rpb_setRange(self, maximum, minimum):
-        """
-        Range include the maximum and the minimum in one go.
-        ...
-
-        Parameters
-        --------------
-
-        maximum : int
-            Maximum value of the round progress bar
-
-        minimum : int
-            Minimum value for the round progress bar
-
-        Raises
-        --------------
-        none
-        """
 
         if minimum > maximum:
             maximum, minimum = minimum, maximum
@@ -256,723 +139,346 @@ class roundProgressBar(QtWidgets.QWidget):
         self.update()
 
     def rpb_setInitialPos(self, pos):
-        """
-        Starting position of the round progress bar
-        ...
-
-        Parameters
-        --------------
-
-        pos : String
-            Position string: 'North', 'South', 'East' and 'West'
-
-        Raises
-        --------------
-        ValueError : Maximum and Minimum cannot be the Same
-        """
 
         if pos == 'North':
-            self.startPosition = self.startPosFlags.North
+            self.start_position = self.StartPosFlags.North
         elif pos == 'South':
-            self.startPosition = self.startPosFlags.South
+            self.start_position = self.StartPosFlags.South
         elif pos == 'East':
-            self.startPosition = self.startPosFlags.East
+            self.start_position = self.StartPosFlags.East
         elif pos == 'West':
-            self.startPosition = self.startPosFlags.West
+            self.start_position = self.StartPosFlags.West
         else:
             raise Exception("Initial Position String can be: 'South', 'North'")
-            return
 
     def rpb_setValue(self, value):
-        """
-        Set progress value
-        ...
-
-        Parameters
-        --------------
-
-        value : int
-            The value of the progress bar in int. The value should be: min<=value<=max
-
-        Raises
-        --------------
-        none
-        """
 
         if self.rpb_value != value:
             if value >= self.rpb_maximum:
-                roundProgressBar.convertInputValue(self, self.rpb_maximum)
+                RoundProgressBar.convertInputValue(self, self.rpb_maximum)
             elif value < self.rpb_minimum:
-                roundProgressBar.convertInputValue(self, self.rpb_minimum)
+                RoundProgressBar.convertInputValue(self, self.rpb_minimum)
             else:
-                roundProgressBar.convertInputValue(self, value)
+                RoundProgressBar.convertInputValue(self, value)
             self.update()
 
     def rpb_reset(self):
-        """
-        Reset the progress bar to 0%
-        ...
 
-        Parameters
-        --------------
-        none
-
-        Raises
-        --------------
-        none
-        """
-
-        roundProgressBar.convertInputValue(self, self.rpb_minimum)
+        RoundProgressBar.convertInputValue(self, self.rpb_minimum)
         self.update()
 
-    def rpb_setGeometry(self, posX, posY):
-        """
-        Set the X and Y position of the round progress bar.
-        ...
+    def rpb_setGeometry(self, pos_x, pos_y):
 
-        Parameters
-        --------------
-
-        posX : int
-            The position of the round progress bar in int for X axis.
-
-        posY : int
-            The position of the round progress bar in int for Y axis.
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.positionX != posX:
-            self.positionX = posX
-        if self.positionY != posY:
-            self.positionY = posY
+        if self.position_x != pos_x:
+            self.position_x = pos_x
+        if self.position_y != pos_y:
+            self.position_y = pos_y
         self.update()
 
     def rpb_setLineWidth(self, width):
-        """
-        Line Width of the line in round progress bar.
-        ...
-
-        Parameters
-        --------------
-
-        width: int
-            Line width corresponding to the width in px.
-
-        Raises
-        --------------
-        Exception: Line Width should be in int
-        """
 
         if type(width) != type(5):
             raise Exception('Line Width should be in int')
-            return
-        if self.lineWidth != width:
-            self.lineWidth = width
+        if self.line_width != width:
+            self.line_width = width
             self.update()
 
     def rpb_setLineColor(self, rgb):
-        """
-        Line Color of the progress bar.
-        ...
-
-        Parameters
-        --------------
-
-        rgb: tuple: (R, G, B)
-            Color is passed as a tuple of values for red, blue and green in the order: (R, G, B)
-
-        Raises
-        --------------
-        Exception: Line Color accepts a tuple: (R, G, B).
-        """
 
         if type(rgb) != type(()):
             raise Exception("Line Color accepts a tuple: (R, G, B).")
-            return
-        if self.lineColor != rgb:
-            self.lineColor = rgb
+        if self.line_color != rgb:
+            self.line_color = rgb
             self.update()
 
     def rpb_setPathColor(self, rgb):
-        """
-        Path Color settings.
-        ...
-
-        Parameters
-        --------------
-
-        rgb: tuple: (R, G, B)
-            Color is passed as a tuple of values for red, blue and green in the order: (R, G, B)
-
-        Raises
-        --------------
-        Exception: Path Color accepts a tuple: (R, G, B).
-        """
 
         if type(rgb) != type(()):
             raise Exception("Path Color accepts a tuple: (R, G, B).")
-            return
-        if self.pathColor != rgb:
-            self.pathColor = rgb
+        if self.path_color != rgb:
+            self.path_color = rgb
             self.update()
 
     def rpb_setPathWidth(self, width):
-        """
-        Path width settings.
-        ...
-
-        Parameters
-        --------------
-
-        width: int
-            Width of the path in px
-
-        Raises
-        --------------
-        Exception: Line Width should be in int
-        """
 
         if type(width) != type(5):
             raise Exception('Path Width should be in int')
-            return
-        if self.pathWidth != width:
-            self.pathWidth = width
+        if self.path_width != width:
+            self.path_width = width
             self.update()
 
     def rpb_setDirection(self, direction):
-        """
-        Direction of rotation of the progress bar.
-        ...
-
-        Parameters
-        --------------
-
-        direction: string
-            string can be: 'AntiClockwise' or 'Clockwise'. Default: 'Clockwise'.
-
-        Raises
-        --------------
-        Exception: Direction can only be: 'Clockwise' and 'AntiClockwise'
-        """
 
         if direction == 'Clockwise' or direction == -1:
-            self.rpb_direction = self.rotationFlags.Clockwise
+            self.rpb_direction = self.RotationFlags.Clockwise
         elif direction == 'AntiClockwise' or direction == 1:
-            self.rpb_direction = self.rotationFlags.AntiClockwise
+            self.rpb_direction = self.RotationFlags.AntiClockwise
         else:
             raise Exception("Direction can only be: 'Clockwise' and 'AntiClockwise' and Not: " + str(direction))
-            return
         self.update()
 
     def rpb_setBarStyle(self, style):
-        """
-        Bar Style of the progress bar.
-        ...
 
-        Parameters
-        --------------
-
-        style: String
-            String of the styles of the progress bar: 'Donet', 'Pie', 'line', 'Hybrid1', 'Hybrid2', 'Pizza'
-
-        Raises
-        --------------
-        Exception: Round Progress Bar has only the following styles: 'Line', 'Donet', 'Hybrid1', 'Pizza', 'Pie' and 'Hybrid2'
-        """
-
-        if style == 'Donet':
-            self.rpb_type = self.barStyleFlags.Donet
+        if style == 'Donut':
+            self.rpb_type = self.BarStyleFlags.Donut
         elif style == 'Line':
-            self.rpb_type = self.barStyleFlags.Line
+            self.rpb_type = self.BarStyleFlags.Line
         elif style == 'Pie':
-            self.rpb_type = self.barStyleFlags.Pie
+            self.rpb_type = self.BarStyleFlags.Pie
         elif style == 'Pizza':
-            self.rpb_type = self.barStyleFlags.Pizza
+            self.rpb_type = self.BarStyleFlags.Pizza
         elif style == 'Hybrid1':
-            self.rpb_type = self.barStyleFlags.Hybrid1
+            self.rpb_type = self.BarStyleFlags.Hybrid1
         elif style == 'Hybrid2':
-            self.rpb_type = self.barStyleFlags.Hybrid2
+            self.rpb_type = self.BarStyleFlags.Hybrid2
         else:
             raise Exception(
                 "Round Progress Bar has only the following styles: 'Line', 'Donet', 'Hybrid1', 'Pizza', 'Pie' and 'Hybrid2'")
-            return
         self.update()
 
     def rpb_setLineStyle(self, style):
-        """
-        Line Style setting.
-        ...
-
-        Parameters
-        --------------
-
-        style: String
-            Line style: 'DotLine', 'DashLine', 'SolidLine', passed as a string.
-
-        Raises
-        --------------
-        none
-        """
 
         if style == 'SolidLine':
-            self.rpb_lineStyle = self.lineStyleFlags.SolidLine
+            self.rpb_line_style = self.LineStyleFlags.SolidLine
         elif style == 'DotLine':
-            self.rpb_lineStyle = self.lineStyleFlags.DotLine
+            self.rpb_line_style = self.LineStyleFlags.DotLine
         elif style == 'DashLine':
-            self.rpb_lineStyle = self.lineStyleFlags.DashLine
+            self.rpb_line_style = self.LineStyleFlags.DashLine
         else:
-            self.rpb_lineStyle = self.lineStyleFlags.SolidLine
+            self.rpb_line_style = self.LineStyleFlags.SolidLine
 
     def rpb_setLineCap(self, cap):
-        """
-        Line Cap setting.
-        ...
-
-        Parameters
-        --------------
-
-        cap: String
-            Cap is the end point of a stroke. It can be: 'RoundCap' or 'SquareCap'
-
-        Raises
-        --------------
-        none
-        """
 
         if cap == 'SquareCap':
-            self.rpb_lineCap = self.lineCapFlags.SquareCap
+            self.rpb_line_cap = self.LineCapFlags.SquareCap
         elif cap == 'RoundCap':
-            self.rpb_lineCap = self.lineCapFlags.RoundCap
+            self.rpb_line_cap = self.LineCapFlags.RoundCap
 
     def rpb_setTextColor(self, rgb):
-        """
-        Text color of the text inside the progress bar
-        ...
 
-        Parameters
-        --------------
-
-        rgb: tuple
-            Color of the text in the format: (R, G, B)
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_textColor != rgb:
-            self.rpb_textColor = rgb
+        if self.rpb_text_color != rgb:
+            self.rpb_text_color = rgb
             self.update()
 
     def rpb_setTextFont(self, font):
-        """
-        Font of the text inside the round progress bar
-        ...
-
-        Parameters
-        --------------
-
-        font: str
-            Name of the font in string
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_textFont != font:
-            self.rpb_textFont = font
+        if self.rpb_text_font != font:
+            self.rpb_text_font = font
             self.update()
 
     def rpb_setTextFormat(self, textTyp):
-        """
-        Text formatter i.e. the value or the percentage.
-        ...
-
-        Parameters
-        --------------
-
-        textTyp: str
-            'value', 'percentage'
-
-        Raises
-        --------------
-        none
-        """
 
         if textTyp == 'Value':
-            self.rpb_textType = self.textFlags.Value
+            self.rpb_text_type = self.TextFlags.Value
         elif textTyp == 'Percentage':
-            self.rpb_textType = self.textFlags.Percentage
+            self.rpb_text_type = self.TextFlags.Percentage
         else:
-            self.rpb_textType = self.textFlags.Percentage
+            self.rpb_text_type = self.TextFlags.Percentage
 
     def rpb_setTextRatio(self, ratio):
-        """
-        Text ratio with respect to the size of the progress bar.
-        ...
 
-        Parameters
-        --------------
-
-        ratio: int
-            In number from 3 to 50 corresponding to 1/3 or 1/50 the size of the roundprogressbar.
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_textRatio != ratio:
+        if self.rpb_text_ratio != ratio:
             if ratio < 3:
                 ratio = 3
             elif ratio > 50:
                 ratio = 50
-            self.rpb_textRatio = ratio
+            self.rpb_text_ratio = ratio
             self.update()
 
     def rpb_setTextWidth(self, width):
-        """
-        Text Width.
-        ...
 
-        Parameters
-        --------------
-
-        font: int
-            Text constant width. Will not change during the widget resize.
-
-        Raises
-        --------------
-        none
-        """
-
-        self.dynamicText = False
+        self.dynamic_text = False
         if width > 0:
-            self.rpb_textWidth = width
+            self.rpb_text_width = width
             self.update()
 
     def rpb_setCircleColor(self, rgb):
-        """
-        Circle color fill inside the circle.
-        ...
 
-        Parameters
-        --------------
-
-        font: tuple
-            The color of the circle in the tuple corresponding to the (R, G, B).
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_circleColor != rgb:
-            self.rpb_circleColor = rgb
+        if self.rpb_circle_color != rgb:
+            self.rpb_circle_color = rgb
             self.update()
 
     def rpb_setCircleRatio(self, ratio):
-        """
-        Circle ration corresponding to the round progress bar.
-        ...
 
-        Parameters
-        --------------
-
-        font: int
-            Integer corresponding to the size of the progress bar to that of the round progress bar.
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_circleRatio != ratio:
-            self.rpb_circleRatio = ratio
+        if self.rpb_circle_ratio != ratio:
+            self.rpb_circle_ratio = ratio
             self.update()
 
     def rpb_setPieColor(self, rgb):
-        """
-        Pie color inside the fill.
-        ...
 
-        Parameters
-        --------------
-
-        font: tuple
-            Tuple consist in format (R, G, B). Same as color setting to Line.
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_pieColor != rgb:
-            self.rpb_pieColor = rgb
+        if self.rpb_pie_color != rgb:
+            self.rpb_pie_color = rgb
             self.update()
 
     def rpb_setPieRatio(self, ratio):
-        """
-        Pie Ratio
-        ...
 
-        Parameters
-        --------------
-
-        font: int
-            Ratio corresponding to the size between the roundprogressbar and the pie size.
-
-        Raises
-        --------------
-        none
-        """
-
-        if self.rpb_pieRatio != ratio:
-            self.rpb_pieRatio = ratio
+        if self.rpb_pie_ratio != ratio:
+            self.rpb_pie_ratio = ratio
             self.update()
 
     def rpb_enableText(self, enable):
-        """
-        Makes the Text visible/Hidden
-        ...
+      self.rpb_text_active = enable
 
-        Parameters
-        --------------
+      self.update()
 
-        font: bool
-            True: Text visible, False: Text invisible.
-
-        Raises
-        --------------
-        none
-        """
-
-        if enable:
-            self.rpb_textActive = enable
-        else:
-            self.rpb_textActive = enable
-        self.update()
-
-    # ------------------------------------------------------METHODS FOR GETTING THE PROPERTY OF ROUNDPROGRESSBAR SLOTS
 
     def rpb_getSize(self):
-        """
-        Get the present size of the progress bar.
-        ...
-
-        Returns
-        --------------
-        Return the size of the round progress bar in int.
-        """
-
-        return self.rpb_Size
+       return self.rpb_size
 
     def rpb_getValue(self):
-        """
-        Present value of the progress bar.
-        ...
-
-        Returns
-        --------------
-        int corresponding to the present progress bar value.
-        """
-
-        return self.rpb_value / 16
+       return self.rpb_value / 16
 
     def rpb_getRange(self):
-        """
-        Progress bar range.
-        ...
-
-        Returns
-        --------------
-        tuple consisting of minimu and maximum as elements.
-        """
-
-        return (self.rpb_minimum, self.rpb_maximum)
+        return self.rpb_minimum, self.rpb_maximum
 
     def rpb_getTextWidth(self):
-        """
-        Text width of the present text in the central of the widget.
-        ...
 
-        Returns
-        --------------
-        int corresponding to the width of the text
-        """
+        return self.rpb_text_width
 
-        return self.rpb_textWidth
+    def rpb_MinimumSize(self, dynamic_max, minimum, maximum):
 
-    # ------------------------------------------------------ENGINE: WHERE ALL THE REAL STUFF TAKE PLACE: WORKING OF THE ROUNDPROGRESSBA
-
-    def rpb_MinimumSize(self, dynamicMax, minimum, maximum):
-        """
-        Minimum size calculating code: Takes consideration of the width of the line/path/circle/pie and the user defined
-        width and also the size of the frame/window of the application.
-
-        """
-
-        rpb_Height = self.height()
-        rpb_Width = self.width()
-        if dynamicMax:
-            if rpb_Width >= rpb_Height and rpb_Height >= minimum[1]:
-                self.rpb_Size = rpb_Height
-            elif rpb_Width < rpb_Height and rpb_Width >= minimum[0]:
-                self.rpb_Size = rpb_Width
+        rpb_height = self.height()
+        rpb_width = self.width()
+        if dynamic_max:
+            if rpb_width >= rpb_height >= minimum[1]:
+                self.rpb_size = rpb_height
+            elif rpb_height > rpb_width >= minimum[0]:
+                self.rpb_size = rpb_width
         else:
-            if rpb_Width >= rpb_Height and rpb_Height <= maximum[1]:
-                self.rpb_Size = rpb_Height
-            elif rpb_Width < rpb_Height and rpb_Width <= maximum[0]:
-                self.rpb_Size = rpb_Width
+            if rpb_width >= rpb_height and rpb_height <= maximum[1]:
+                self.rpb_size = rpb_height
+            elif rpb_width < rpb_height and rpb_width <= maximum[0]:
+                self.rpb_size = rpb_width
 
     def convertInputValue(self, value):
-        """
-        CONVERTS ANY INPUT VALUE TO THE 0*16-360*16 DEGREE REFERENCE OF THE QPainter.drawArc NEEDED.
-
-        """
 
         self.rpb_value = ((value - self.rpb_minimum) / (self.rpb_maximum - self.rpb_minimum)) * 360 * 16
         self.rpb_value = self.rpb_direction * self.rpb_value
-        if self.rpb_textType == roundProgressBar.textFlags.Percentage:
-            self.rpb_textValue = str(
+        if self.rpb_text_type == RoundProgressBar.TextFlags.Percentage:
+            self.rpb_text_value = str(
                 round(((value - self.rpb_minimum) / (self.rpb_maximum - self.rpb_minimum)) * 100)) + "%"
         else:
-            self.rpb_textValue = str(value)
+            self.rpb_text_value = str(value)
 
-    # SINCE THE THICKNESS OF THE LINE OR THE PATH CAUSES THE WIDGET TO WRONGLY FIT INSIDE THE SIZE OF THE WIDGET DESIGNED IN THE
-    # QTDESIGNER, THE CORRECTION FACTOR IS NECESSERY CALLED THE GEOMETRYFACTOR, WHICH CALCULATE THE TWO FACTORS CALLED THE
-    # self.posFactor AND THE self.sizeFactor, CALCULATION THIS IS NECESSERY AS THE
     def geometryFactor(self):
-        if self.lineWidth > self.pathWidth:
-            self.posFactor = self.lineWidth / 2 + 1
-            self.sizeFactor = self.lineWidth + 1
+        if self.line_width > self.path_width:
+            self.pos_factor = self.line_width / 2 + 1
+            self.size_factor = self.line_width + 1
         else:
-            self.posFactor = self.pathWidth / 2 + 1
-            self.sizeFactor = self.pathWidth + 1
+            self.pos_factor = self.path_width / 2 + 1
+            self.size_factor = self.path_width + 1
 
     def rpb_textFactor(self):
-        if self.dynamicText:
-            self.rpb_textWidth = self.rpb_Size / self.rpb_textRatio
-        self.textFactorX = self.posFactor + (self.rpb_Size - self.sizeFactor) / 2 - self.rpb_textWidth * 0.75 * (
-                    len(self.rpb_textValue) / 2)
-        self.textFactorY = self.rpb_textWidth / 2 + self.rpb_Size / 2
+        if self.dynamic_text:
+            self.rpb_text_width = self.rpb_size / self.rpb_text_ratio
+        self.text_factor_x = self.pos_factor + (self.rpb_size - self.size_factor) / 2 - self.rpb_text_width * 0.75 * (
+                len(self.rpb_text_value) / 2)
+        self.text_factor_y = self.rpb_text_width / 2 + self.rpb_size / 2
 
     def rpb_circleFactor(self):
-        self.rpb_circlePosX = self.positionX + self.posFactor + ((self.rpb_Size) * (1 - self.rpb_circleRatio)) / 2
-        self.rpb_circlePosY = self.positionY + self.posFactor + ((self.rpb_Size) * (1 - self.rpb_circleRatio)) / 2
+        self.rpb_circle_pos_x = self.position_x + self.pos_factor + (self.rpb_size * (1 - self.rpb_circle_ratio)) / 2
+        self.rpb_circle_pos_y = self.position_y + self.pos_factor + (self.rpb_size * (1 - self.rpb_circle_ratio)) / 2
 
     def rpb_pieFactor(self):
-        self.rpb_piePosX = self.positionX + self.posFactor + ((self.rpb_Size) * (1 - self.rpb_pieRatio)) / 2
-        self.rpb_piePosY = self.positionY + self.posFactor + ((self.rpb_Size) * (1 - self.rpb_pieRatio)) / 2
+        self.rpb_pie_pos_x = self.position_x + self.pos_factor + (self.rpb_size * (1 - self.rpb_pie_ratio)) / 2
+        self.rpb_pie_pos_y = self.position_y + self.pos_factor + (self.rpb_size * (1 - self.rpb_pie_ratio)) / 2
 
     def paintEvent(self, event: QPaintEvent):
 
-        # THIS BELOW CODE AMKE SURE THAT THE SIZE OF THE ROUNDPROGRESSBAR DOESNOT REDUCES TO ZERO WHEN THE USER RESIZES THE WINDOW
-        if self.rpb_dynamicMin:
-            self.setMinimumSize(QSize(self.lineWidth * 6 + self.pathWidth * 6, self.lineWidth * 6 + self.pathWidth * 6))
+        if self.rpb_dynamic_min:
+            self.setMinimumSize(QSize(self.line_width * 6 + self.path_width * 6, self.line_width * 6 + self.path_width * 6))
 
-        roundProgressBar.rpb_MinimumSize(self, self.rpb_dynamicMax, self.rpb_minimumSize, self.rpb_maximumSize)
-        roundProgressBar.geometryFactor(self)
-        roundProgressBar.rpb_textFactor(self)
-        roundProgressBar.rpb_circleFactor(self)
-        roundProgressBar.rpb_pieFactor(self)
+        RoundProgressBar.rpb_MinimumSize(self, self.rpb_dynamic_max, self.rpb_minimum_size, self.rpb_maximum_size)
+        RoundProgressBar.geometryFactor(self)
+        RoundProgressBar.rpb_textFactor(self)
+        RoundProgressBar.rpb_circleFactor(self)
+        RoundProgressBar.rpb_pieFactor(self)
 
-        if self.rpb_type == 0:  # DONET TYPE
-            roundProgressBar.pathComponent(self)
-            roundProgressBar.lineComponent(self)
-            roundProgressBar.textComponent(self)
+        if self.rpb_type == 0:  # DONUT TYPE
+            RoundProgressBar.pathComponent(self)
+            RoundProgressBar.lineComponent(self)
+            RoundProgressBar.textComponent(self)
         elif self.rpb_type == 1:  # LINE TYPE
-            roundProgressBar.lineComponent(self)
-            roundProgressBar.textComponent(self)
+            RoundProgressBar.lineComponent(self)
+            RoundProgressBar.textComponent(self)
         elif self.rpb_type == 2:  # Pie
-            roundProgressBar.pieComponent(self)
-            roundProgressBar.textComponent(self)
+            RoundProgressBar.pieComponent(self)
+            RoundProgressBar.textComponent(self)
         elif self.rpb_type == 3:  # PIZZA
-            roundProgressBar.circleComponent(self)
-            roundProgressBar.lineComponent(self)
-            roundProgressBar.textComponent(self)
+            RoundProgressBar.circleComponent(self)
+            RoundProgressBar.lineComponent(self)
+            RoundProgressBar.textComponent(self)
         elif self.rpb_type == 4:  # HYBRID1
-            roundProgressBar.circleComponent(self)
-            roundProgressBar.pathComponent(self)
-            roundProgressBar.lineComponent(self)
-            roundProgressBar.textComponent(self)
+            RoundProgressBar.circleComponent(self)
+            RoundProgressBar.pathComponent(self)
+            RoundProgressBar.lineComponent(self)
+            RoundProgressBar.textComponent(self)
         elif self.rpb_type == 5:  # HYBRID2
-            roundProgressBar.pieComponent(self)
-            roundProgressBar.lineComponent(self)
-            roundProgressBar.textComponent(self)
+            RoundProgressBar.pieComponent(self)
+            RoundProgressBar.lineComponent(self)
+            RoundProgressBar.textComponent(self)
 
     def lineComponent(self):
-        linePainter = QPainter(self)
-        linePainter.setRenderHint(QPainter.Antialiasing)
-        penLine = QPen()
-        penLine.setStyle(self.rpb_lineStyle)
-        penLine.setWidth(self.lineWidth)
-        penLine.setBrush(QColor(self.lineColor[0], self.lineColor[1], self.lineColor[2]))
-        penLine.setCapStyle(self.rpb_lineCap)
-        penLine.setJoinStyle(Qt.RoundJoin)
-        linePainter.setPen(penLine)
-        linePainter.drawArc(self.positionX + self.posFactor, self.positionY + self.posFactor,
-                            self.rpb_Size - self.sizeFactor, self.rpb_Size - self.sizeFactor, self.startPosition,
+        line_painter = QPainter(self)
+        line_painter.setRenderHint(QPainter.Antialiasing)
+        pen_line = QPen()
+        pen_line.setStyle(self.rpb_line_style)
+        pen_line.setWidth(self.line_width)
+        pen_line.setBrush(QColor(self.line_color[0], self.line_color[1], self.line_color[2]))
+        pen_line.setCapStyle(self.rpb_line_cap)
+        pen_line.setJoinStyle(Qt.RoundJoin)
+        line_painter.setPen(pen_line)
+        line_painter.drawArc(self.position_x + self.pos_factor, self.position_y + self.pos_factor,
+                            self.rpb_size - self.size_factor, self.rpb_size - self.size_factor, self.start_position,
                             self.rpb_value)
-        linePainter.end()
+        line_painter.end()
 
     def pathComponent(self):
-        pathPainter = QPainter(self)
-        pathPainter.setRenderHint(QPainter.Antialiasing)
-        penPath = QPen()
-        penPath.setStyle(Qt.SolidLine)
-        penPath.setWidth(self.pathWidth)
-        penPath.setBrush(QColor(self.pathColor[0], self.pathColor[1], self.pathColor[2]))
-        penPath.setCapStyle(Qt.RoundCap)
-        penPath.setJoinStyle(Qt.RoundJoin)
-        pathPainter.setPen(penPath)
-        pathPainter.drawArc(self.positionX + self.posFactor, self.positionY + self.posFactor,
-                            self.rpb_Size - self.sizeFactor, self.rpb_Size - self.sizeFactor, 0, 360 * 16)
-        pathPainter.end()
+        path_painter = QPainter(self)
+        path_painter.setRenderHint(QPainter.Antialiasing)
+        pen_path = QPen()
+        pen_path.setStyle(Qt.SolidLine)
+        pen_path.setWidth(self.path_width)
+        pen_path.setBrush(QColor(self.path_color[0], self.path_color[1], self.path_color[2]))
+        pen_path.setCapStyle(Qt.RoundCap)
+        pen_path.setJoinStyle(Qt.RoundJoin)
+        path_painter.setPen(pen_path)
+        path_painter.drawArc(self.position_x + self.pos_factor, self.position_y + self.pos_factor,
+                            self.rpb_size - self.size_factor, self.rpb_size - self.size_factor, 0, 360 * 16)
+        path_painter.end()
 
     def textComponent(self):
-        if self.rpb_textActive:
-            textPainter = QPainter(self)
-            penText = QPen()
-            penText.setColor(QColor(self.rpb_textColor[0], self.rpb_textColor[1], self.rpb_textColor[2]))
-            textPainter.setPen(penText)
-            fontText = QFont()
-            fontText.setFamily(self.rpb_textFont)
-            fontText.setPointSize(self.rpb_textWidth)
-            textPainter.setFont(fontText)
-            textPainter.drawText(self.positionX + self.textFactorX, self.positionY + self.textFactorY,
-                                 self.rpb_textValue)
-            textPainter.end()
+        if self.rpb_text_active:
+            text_painter = QPainter(self)
+            pen_text = QPen()
+            pen_text.setColor(QColor(self.rpb_text_color[0], self.rpb_text_color[1], self.rpb_text_color[2]))
+            text_painter.setPen(pen_text)
+            font_text = QFont()
+            font_text.setFamily(self.rpb_text_font)
+            font_text.setPointSize(self.rpb_text_width)
+            text_painter.setFont(font_text)
+            text_painter.drawText(self.position_x + self.text_factor_x, self.position_y + self.text_factor_y,
+                                 self.rpb_text_value)
+            text_painter.end()
 
     def circleComponent(self):
-        circlePainter = QPainter(self)
-        penCircle = QPen()
-        penCircle.setWidth(0)
-        penCircle.setColor(QColor(self.rpb_circleColor[0], self.rpb_circleColor[1], self.rpb_circleColor[2]))
-        circlePainter.setRenderHint(QPainter.Antialiasing)
-        circlePainter.setPen(penCircle)
-        circlePainter.setBrush(QColor(self.rpb_circleColor[0], self.rpb_circleColor[1], self.rpb_circleColor[2]))
-        circlePainter.drawEllipse(self.rpb_circlePosX, self.rpb_circlePosY,
-                                  (self.rpb_Size - self.sizeFactor) * self.rpb_circleRatio,
-                                  (self.rpb_Size - self.sizeFactor) * self.rpb_circleRatio)
+        circle_painter = QPainter(self)
+        pen_circle = QPen()
+        pen_circle.setWidth(0)
+        pen_circle.setColor(QColor(self.rpb_circle_color[0], self.rpb_circle_color[1], self.rpb_circle_color[2]))
+        circle_painter.setRenderHint(QPainter.Antialiasing)
+        circle_painter.setPen(pen_circle)
+        circle_painter.setBrush(QColor(self.rpb_circle_color[0], self.rpb_circle_color[1], self.rpb_circle_color[2]))
+        circle_painter.drawEllipse(self.rpb_circle_pos_x, self.rpb_circle_pos_y,
+                                  int((self.rpb_size - self.size_factor) * self.rpb_circle_ratio),
+                                  int((self.rpb_size - self.size_factor) * self.rpb_circle_ratio))
 
     def pieComponent(self):
-        piePainter = QPainter(self)
-        penPie = QPen()
-        penPie.setWidth(0)
-        penPie.setColor(QColor(self.rpb_pieColor[0], self.rpb_pieColor[1], self.rpb_pieColor[2]))
-        piePainter.setRenderHint(QPainter.Antialiasing)
-        piePainter.setPen(penPie)
-        piePainter.setBrush(QColor(self.rpb_pieColor[0], self.rpb_pieColor[1], self.rpb_pieColor[2]))
-        piePainter.drawPie(self.rpb_piePosX, self.rpb_piePosY, (self.rpb_Size - self.sizeFactor) * self.rpb_pieRatio,
-                           (self.rpb_Size - self.sizeFactor) * self.rpb_pieRatio, self.startPosition, self.rpb_value)
-
-
-# ------------------------------------------------------
-
-if __name__ == "__main__":
-    print("Try Import.")
+        pie_painter = QPainter(self)
+        pen_pie = QPen()
+        pen_pie.setWidth(0)
+        pen_pie.setColor(QColor(self.rpb_pie_color[0], self.rpb_pie_color[1], self.rpb_pie_color[2]))
+        pie_painter.setRenderHint(QPainter.Antialiasing)
+        pie_painter.setPen(pen_pie)
+        pie_painter.setBrush(QColor(self.rpb_pie_color[0], self.rpb_pie_color[1], self.rpb_pie_color[2]))
+        pie_painter.drawPie(self.rpb_pie_pos_x, self.rpb_pie_pos_y, (self.rpb_size - self.size_factor) * self.rpb_pie_ratio,
+                           (self.rpb_size - self.size_factor) * self.rpb_pie_ratio, self.start_position, self.rpb_value)

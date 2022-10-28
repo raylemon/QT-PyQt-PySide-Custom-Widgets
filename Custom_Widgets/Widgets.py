@@ -1,53 +1,26 @@
-########################################################################
-## SPINN DESIGN CODE
-# YOUTUBE: (SPINN TV) https://www.youtube.com/spinnTv
-# WEBSITE: spinndesign.com
-########################################################################
 
-########################################################################
-## IMPORTS
-########################################################################
 import os
-os.environ['ICONIFY_QTLIB'] = "qtpy"
-import sys
 import iconify as ico  # pip install iconify
 from iconify.qt import QtGui, QtWidgets, QtCore
-import __main__
-
-########################################################################
-## COMPILE SASS
-########################################################################
 from .Qss import SassCompiler
 
 CompileStyleSheet = SassCompiler.CompileStyleSheet
+
 from .Qss.SvgToPngIcons import NewIconsGenerator
 
-########################################################################
-## MOCK FOR OBJECTS
-########################################################################
-import mock
 
 try:
-    from qtpy import QtWidgets, QtGui, QtCore
-    from qtpy.QtCore import *
-    from qtpy.QtGui import *
-    from qtpy.QtWidgets import *
-    from qtpy.QtCore import Signal
+    from PySide6 import QtWidgets, QtGui, QtCore
+    from PySide6.QtCore import *
+    from PySide6.QtGui import *
+    from PySide6.QtWidgets import *
+    from PySide6.QtCore import Signal
 except ModuleNotFoundError:
-    print("Please install any suitable version of QT (PyQt or PySide)")
+    print("Please install any suitable version of PySide 6")
 
 # JSON FOR READING THE JSON STYLESHEET
 import json
 
-########################################################################
-## IMPORT WORKER
-########################################################################
-from .WidgetsWorker import Worker, WorkerResponse
-
-
-########################################################################
-## CUSTOM QSLIDER
-########################################################################
 class CustomQSlider(QtWidgets.QSlider):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -65,65 +38,60 @@ class CustomQSlider(QtWidgets.QSlider):
         sr = self.style().subControlRect(QtWidgets.QStyle.CC_Slider, opt, QtWidgets.QStyle.SC_SliderHandle, self)
 
         if self.orientation() == QtCore.Qt.Horizontal:
-            sliderLength = sr.width()
-            sliderMin = gr.x()
-            sliderMax = gr.right() - sliderLength + 1
+            slider_length = sr.width()
+            slider_min = gr.x()
+            slider_max = gr.right() - slider_length + 1
         else:
-            sliderLength = sr.height()
-            sliderMin = gr.y()
-            sliderMax = gr.bottom() - sliderLength + 1;
+            slider_length = sr.height()
+            slider_min = gr.y()
+            slider_max = gr.bottom() - slider_length + 1;
         pr = pos - sr.center() + sr.topLeft()
         p = pr.x() if self.orientation() == QtCore.Qt.Horizontal else pr.y()
-        return QtWidgets.QStyle.sliderValueFromPosition(self.minimum(), self.maximum(), p - sliderMin,
-                                                        sliderMax - sliderMin, opt.upsideDown)
+        return QtWidgets.QStyle.sliderValueFromPosition(self.minimum(), self.maximum(), p - slider_min,
+                                                        slider_max - slider_min, opt.upsideDown)
 
 
-########################################################################
-## GROUP BUTTONS
-########################################################################
 class QCustomPushButtonGroup(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
 
         self.group = None
 
-    ########################################################################
-    ## BUTTON GROUP
-    ########################################################################
+
     def getButtonGroup(self):
         return self.group
 
     def getButtonGroupActiveStyle(self):
         group = self.getButtonGroup()
-        if group == None:
+        if group is None:
             return None
         return getattr(self.groupParent, "group_active_" + str(group))
 
     def getButtonGroupNotActiveStyle(self):
         group = self.getButtonGroup()
-        if group == None:
+        if group is None:
             return None
         return getattr(self.groupParent, "group_not_active_" + str(group))
 
     def getButtonGroupButtons(self):
         group = self.getButtonGroup()
-        if group == None:
+        if group is None:
             return None
         return getattr(self.groupParent, "group_btns_" + str(group))
 
     def setButtonGroupActiveStyle(self, style):
         group = self.getButtonGroup()
-        if group == None:
+        if group is None:
             raise Exception("Unknown button group. The button does not belong to any group")
         setattr(self.groupParent, "group_active_" + str(group), style)
-        groupBtns = self.getButtonGroupButtons()
-        for x in groupBtns:
+        group_btns = self.getButtonGroupButtons()
+        for x in group_btns:
             if x.active:
                 x.setStyleSheet(style)
 
     def setButtonGroupNotActiveStyle(self, style):
         group = self.getButtonGroup()
-        if group == None:
+        if group is None:
             raise Exception("Unknown button group. The button does not belong to any group")
         setattr(self.groupParent, "group_not_active_" + str(group), style)
 
@@ -138,7 +106,6 @@ class QCustomQPushButton(QtWidgets.QPushButton):
         self._animation.setStartValue(0.00001)
         self._animation.setEndValue(0.9999)
         self._animation.valueChanged.connect(self._animate)
-        # self._animation.setEasingCurve(QtCore.QEasingCurve.OutQuad)
 
         # DEAFAULT ANIMATION DURATION
         self._animation.setDuration(500)
@@ -1475,7 +1442,7 @@ def loadJsonStyle(self, ui, **jsonFiles):
     # START THREAD
     self.customWidgetsThreadpool = QThreadPool()
     # Show Logs
-    self.showCustomWidgetsLogs = True
+    self.show_custom_widgets_logs = True
     #######################################################################
     self.ui = ui
     if not jsonFiles:
@@ -1522,10 +1489,10 @@ def applyJsonStyle(self, ui, data):
     if "ShowLogs" in data:
         if data["ShowLogs"]:
             # Show Logs
-            self.showCustomWidgetsLogs = True
+            self.show_custom_widgets_logs = True
         else:
             # Hide Logs
-            self.showCustomWidgetsLogs = False
+            self.show_custom_widgets_logs = False
 
     ########################################################################
     ## QCARDS
@@ -1633,19 +1600,19 @@ def applyJsonStyle(self, ui, data):
                         ################################################################################################
                         # Set gauge min value
                         ################################################################################################
-                        gaugeWidget.minValue = int(AnalogGaugeWidget["minValue"])
+                        gaugeWidget.min_value = int(AnalogGaugeWidget["minValue"])
 
                     if "maxValue" in AnalogGaugeWidget:
                         ################################################################################################
                         # Set gauge max value
                         ################################################################################################
-                        gaugeWidget.maxValue = int(AnalogGaugeWidget["maxValue"])
+                        gaugeWidget.max_value = int(AnalogGaugeWidget["maxValue"])
 
                     if "scalaCount" in AnalogGaugeWidget:
                         ################################################################################################
                         # Set scala count
                         ################################################################################################
-                        gaugeWidget.scalaCount = int(AnalogGaugeWidget["scalaCount"])
+                        gaugeWidget.scala_count = int(AnalogGaugeWidget["scalaCount"])
 
                     if "startValue" in AnalogGaugeWidget:
                         ################################################################################################
@@ -1735,28 +1702,28 @@ def applyJsonStyle(self, ui, data):
                         ################################################################################################
                         # Set needle color
                         ################################################################################################
-                        gaugeWidget.NeedleColor = QColor(str(AnalogGaugeWidget["needleColor"]))
-                        gaugeWidget.NeedleColorReleased = QColor(str(AnalogGaugeWidget["needleColor"]))
+                        gaugeWidget.needle_color = QColor(str(AnalogGaugeWidget["needleColor"]))
+                        gaugeWidget.needle_color_released = QColor(str(AnalogGaugeWidget["needleColor"]))
 
                     if "needleColorOnDrag" in AnalogGaugeWidget and len(
                             str(AnalogGaugeWidget["needleColorOnDrag"])) > 0:
                         ################################################################################################
                         # Set needle color on drag
                         ################################################################################################
-                        gaugeWidget.NeedleColorDrag = QColor(str(AnalogGaugeWidget["needleColorOnDrag"]))
+                        gaugeWidget.needle_color_drag = QColor(str(AnalogGaugeWidget["needleColorOnDrag"]))
 
                     if "scaleValueColor" in AnalogGaugeWidget and len(str(AnalogGaugeWidget["scaleValueColor"])) > 0:
                         ################################################################################################
                         # Set value color
                         ################################################################################################
-                        gaugeWidget.ScaleValueColor = QColor(str(AnalogGaugeWidget["scaleValueColor"]))
+                        gaugeWidget.scale_value_color = QColor(str(AnalogGaugeWidget["scaleValueColor"]))
 
                     if "displayValueColor" in AnalogGaugeWidget and len(
                             str(AnalogGaugeWidget["displayValueColor"])) > 0:
                         ################################################################################################
                         # Set display value color
                         ################################################################################################
-                        gaugeWidget.DisplayValueColor = QColor(str(AnalogGaugeWidget["displayValueColor"]))
+                        gaugeWidget.display_value_color = QColor(str(AnalogGaugeWidget["displayValueColor"]))
 
                     if "bigScaleColor" in AnalogGaugeWidget and len(str(AnalogGaugeWidget["bigScaleColor"])) > 0:
                         ################################################################################################
@@ -2707,7 +2674,7 @@ def returnAnimationEasingCurve(easingCurveName):
         elif str(easingCurveName) == "OutInBounce":
             return QtCore.QEasingCurve.OutInBounce
         else:
-            raise Exception("Unknown value'" + easingCurveName + "' for setEasingCurve() on ", animation)
+            raise Exception("Unknown value'" + easingCurveName + "' for setEasingCurve()")
 
 
 ########################################################################

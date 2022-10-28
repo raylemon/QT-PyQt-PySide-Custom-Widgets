@@ -5,7 +5,7 @@ import os
 import sys
 import traceback
 
-from qtpy.QtCore import QObject, Signal, QRunnable, Slot
+from PySide6.QtCore import QObject, Signal, QRunnable, Slot
 
 
 ########################################################################

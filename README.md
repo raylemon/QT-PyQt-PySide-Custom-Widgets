@@ -51,14 +51,14 @@ You should see the following interface:
     
 - Toggle logs:
     You can now switch app logs on or off.
-    This can be done from a python file:
+  This can be done from a python file:
     ```python
     # Show Logs
-    self.showCustomWidgetsLogs = True
+    self.show_custom_widgets_logs = True
     ```
     ```python
     # Hide Logs
-    self.showCustomWidgetsLogs = False
+    self.show_custom_widgets_logs = False
     ```
     From the JSON file:
     ```json

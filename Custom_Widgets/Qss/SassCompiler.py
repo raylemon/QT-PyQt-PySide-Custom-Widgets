@@ -8,9 +8,9 @@
 import sys
 ########################################################################
 try:
-    from qtpy.QtCore import *
-    from qtpy.QtGui import *
-    from qtpy.QtWidgets import *
+    from PySide6.QtCore import *
+    from PySide6.QtGui import *
+    from PySide6.QtWidgets import *
 except ModuleNotFoundError:
     print("Please install any suitable version of QT (PyQt or PySide)")
 
